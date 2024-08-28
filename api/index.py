@@ -18,9 +18,9 @@ def upload_audio():
         return 'No audio file selected', 400
 
     if audio_file:
-        filename = audio_file.filename
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        audio_file.save(file_path)
+        # filename = audio_file.filename
+        # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # audio_file.save(file_path)
         return f'Audio chunk {filename} uploaded successfully'
 
     return 'Error uploading audio chunk', 500
