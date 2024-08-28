@@ -1,15 +1,31 @@
-# /api/index.py
-
-from flask import Flask, jsonify
+from flask import Flask, render_template, request
+import os
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-@app.route("/")
-def home():
-    return "Flask Vercel Example - Hello World", 200
+@app.route('/upload', methods=['POST'])
+def upload_audio():
+    if 'audio' not in request.files:
+        return 'No audio file uploaded', 400
 
+    audio_file = request.files['audio']
+    if audio_file.filename == '':
+        return 'No audio file selected', 400
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return jsonify({"status": 404, "message": "Not Found"}), 404
+    if audio_file:
+        filename = audio_file.filename
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        audio_file.save(file_path)
+        return f'Audio chunk {filename} uploaded successfully'
+
+    return 'Error uploading audio chunk', 500
+
+if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    app.run(debug=True)
