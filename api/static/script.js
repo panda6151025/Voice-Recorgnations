@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         audioPlayer.src = URL.createObjectURL(audioBlob);
                         audioPlayer.controls = true;
-                        audioControls.classList.remove('hidden');
+                        audioControls.style.display = "flex";
 
                         progressEl.classList.add('hidden');
 
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     deleteButton.addEventListener('click', function () {
         audioPlayer.src = '';
         audioPlayer.controls = false;
-        audioControls.classList.add('hidden');
+        audioControls.style.display = "none";
     });
 
     sendButton.addEventListener('click', function () {
