@@ -3,33 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
-    <title>Audio Recorder</title>
+    <title>AI Rolex Watch Identifier</title>
     <link rel="stylesheet" href="../static/styles.css" />
   </head>
   <body>
-    <h1>Audio Recorder</h1>
-    <div class="button-container">
-      <div class="mic-container" id="record">
-        <div class="circle">
-          <i class="fas fa-microphone"></i>
-        </div>
-      </div>
-      <div class="mic-container" id="submit">
-        <div class="circle">
-          <i class="fa-sharp fa-solid fa-paper-plane"></i>
-        </div>
-      </div>
+    <!-- Header -->
+    <header>
+      <h1>AI Rolex Watch Identifier</h1>
+      <p>Authenticate your Rolex watch using AI-powered sound analysis</p>
+    </header>
+
+    <!-- Instructions Section -->
+    <section id="instructions">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Position your Rolex watch near the microphone.</li>
+        <li>Wind the watch crown for a few seconds.</li>
+        <li>
+          Click the 'Start Recording' button and continue winding for 5 seconds.
+        </li>
+      </ol>
+    </section>
+
+    <!-- Recording Section -->
+    <section id="recording">
+      <button id="start-btn">Start Recording</button>
+      <div id="countdown"></div>
+      <div id="progress" class="hidden">Recording in progress...</div>
+    </section>
+
+    <!-- Audio Playback Section -->
+    <div id="audio-controls" class="hidden">
+      <audio controls id="audio-player"></audio>
+      <button id="delete-btn">Delete</button>
+      <button id="send-btn">Send to Backend</button>
     </div>
 
-    <div id="recordingsList"></div>
     <script src="../static/script.js"></script>
   </body>
 </html>

@@ -1,88 +1,92 @@
-let mediaRecorder;
-let audioChunks = [];
-let chunkIndex = 0;
-const micContainer = document.getElementsByClassName('mic-container')[0];
-const submitContainer = document.getElementsByClassName('mic-container')[1];
+document.addEventListener("DOMContentLoaded", function () {
+    const startButton = document.getElementById('start-btn');
+    const countdownEl = document.getElementById('countdown');
+    const progressEl = document.getElementById('progress');
 
-micContainer.addEventListener('click', (e) => {
-    const circleElement = document.querySelector('.circle');
+    const audioPlayer = document.getElementById('audio-player');
+    const audioControls = document.getElementById('audio-controls');
+    const deleteButton = document.getElementById('delete-btn');
+    const sendButton = document.getElementById('send-btn');
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioBlob;
 
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
+    startButton.addEventListener('click', function () {
+        startButton.disabled = true; // Disable button during the process
+        let countdown = 3;
 
-        circleElement.classList.remove('active');
-        stopRecording();
-    } else {
-        circleElement.classList.add('active');
-        startRecording();
-    }
-});
+        countdownEl.textContent = countdown;
+        countdownEl.classList.remove('hidden');
+        const countdownInterval = setInterval(() => {
+            countdown -= 1;
+            countdownEl.textContent = countdown;
 
-submitContainer.addEventListener('click', (e) => {
-    console.log(audioChunks.length)
-})
-
-function startRecording() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
-
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                saveChunk(audioBlob);
-            };
-
-            setInterval(() => {
-                if (mediaRecorder.state === "recording") {
-                    mediaRecorder.stop();
-                }
-            }, 5000);
-        })
-        .catch(error => console.error("Error accessing microphone: ", error));
-}
-
-function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-    }
-}
-
-function saveChunk(audioBlob) {
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = document.createElement('audio');
-    const li = document.createElement('li');
-    const deleteButton = document.createElement('div');
-
-    audio.setAttribute('controls', '');
-    audio.src = audioUrl;
-
-    deleteButton.classList.add('button-icon', 'delete-button');
-    deleteButton.id = 'deleteButton';
-    deleteButton.addEventListener('click', () => {
-        li.remove();
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                countdownEl.classList.add('hidden');
+                startRecording();
+            }
+        }, 1000);
     });
 
-    li.appendChild(audio);
-    li.appendChild(deleteButton);
+    function startRecording() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
 
-    document.getElementById("recordingsList").appendChild(li);
-}
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = function (event) {
+                        audioChunks.push(event.data);
+                    };
 
-function sendChunkToBackend(audioBlob) {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, `chunk${chunkIndex}.webm`);
+                    progressEl.classList.remove('hidden');
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                    }, 5000); // Record for 5 seconds
 
-    fetch('/upload', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.text())
-        .then(data => {
-            console.log(`Chunk #${chunkIndex} uploaded successfully`);
+                    mediaRecorder.onstop = function () {
+                        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        audioPlayer.src = URL.createObjectURL(audioBlob);
+                        audioPlayer.controls = true;
+                        audioControls.classList.remove('hidden');
+
+                        progressEl.classList.add('hidden');
+
+                        startButton.disabled = false; // Enable button after process
+                    };
+                })
+                .catch(error => console.error("Error accessing microphone:", error));
+        }
+    }
+
+    deleteButton.addEventListener('click', function () {
+        audioPlayer.src = '';
+        audioPlayer.controls = false;
+        audioControls.classList.add('hidden');
+    });
+
+    sendButton.addEventListener('click', function () {
+        sendAudioToServer(audioBlob);
+    });
+
+    function sendAudioToServer(audioBlob) {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
         })
-        .catch(error => console.error('Error uploading audio chunk:', error));
-}
+            .then(response => response.text())
+            .then(data => {
+                alert(data)
+
+            })
+            .catch(error => {
+                console.error("Error:", error);
+
+            });
+    }
+});
