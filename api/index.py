@@ -10,12 +10,12 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_audio():
-    # if 'audio' not in request.files:
-    #     return 'No audio file uploaded', 400
+    if 'audio' not in request.files:
+        return 'No audio file uploaded', 400
 
-    # audio_file = request.files['audio']
-    # if audio_file.filename == '':
-    #     return 'No audio file selected', 400
+    audio_file = request.files['audio']
+    if audio_file.filename == '':
+        return 'No audio file selected', 400
 
     # if audio_file:
     #     filename = audio_file.filename
