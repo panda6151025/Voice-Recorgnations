@@ -28,9 +28,9 @@ def upload_audio():
         else:
             prediction_result = "Your audio suggests that the watch is not a genuine Rolex based on the dataset we have."
 
-        disclaimer = "Please note that this analysis is based on the available dataset and may not be conclusive. For a more definitive authentication, consult with a professional Rolex expert."
+        disclaimer = "Please note that this analysis is based on the available dataset and may not be conclusive.\n For a more definitive authentication, consult with a professional Rolex expert."
 
-        return f'{prediction_result} \n {disclaimer}'
+        return f'{prediction_result} \n \n {disclaimer}'
 
     return f'Error uploading audio chunk'
 
