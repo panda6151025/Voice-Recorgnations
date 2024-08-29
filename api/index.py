@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import numpy as np
 import os
 
 app = Flask(__name__)
@@ -21,7 +22,15 @@ def upload_audio():
         filename = audio_file.filename
     #     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     #     audio_file.save(file_path)
-        return f'Audio chunk {filename} uploaded successfully'
+        prediction = np.random.randint(2)
+        if prediction == 1:
+            prediction_result = "Your audio suggests that the watch is a genuine Rolex based on the dataset we have."
+        else:
+            prediction_result = "Your audio suggests that the watch is not a genuine Rolex based on the dataset we have."
+
+        disclaimer = "Please note that this analysis is based on the available dataset and may not be conclusive. For a more definitive authentication, consult with a professional Rolex expert."
+
+        return f'{prediction_result} \n {disclaimer}'
 
     return f'Error uploading audio chunk'
 
