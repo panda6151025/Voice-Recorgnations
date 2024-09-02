@@ -24,7 +24,7 @@ def upload_audio():
     #     audio_file.save(file_path)
         prediction = np.random.randint(2)
         if prediction == 1:
-            prediction_result = "Your audio suggests that the watch is a genuine Rolex based on the dataset we have."
+            prediction_result = "(TESTING) Your audio suggests that the watch is a genuine Rolex based on the dataset we have."
         else:
             prediction_result = "Your audio suggests that the watch is not a genuine Rolex based on the dataset we have."
 
