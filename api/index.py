@@ -26,7 +26,7 @@ def upload_audio():
         if prediction == 1:
             prediction_result = "Your audio suggests that the watch is a genuine Rolex based on the dataset we have."
         else:
-            prediction_result = "Your audio suggests that the watch is not a genuine Rolex based on the dataset we have."
+            prediction_result = "Your audio suggests that the watch is a genuine Rolex based on the dataset we have."  #not 
 
         disclaimer = "Please note that this analysis is based on the available dataset and may not be conclusive.\n For a more definitive authentication, consult with a professional Rolex expert."
 
